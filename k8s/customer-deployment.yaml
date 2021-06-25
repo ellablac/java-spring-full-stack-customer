@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customerservicedeployment
+spec:
+  selector:
+    matchLabels:
+      app: customerservice
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: customerservice
+    spec:
+      containers:
+      - image: us.icr.io/ellacrnmsp/customerservice:1.0
+        name: customerservice
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9745
+      restartPolicy: Always
+      volumes:
+      - name: customervolume
+        configMap:
+          name: customercm
+          items:
+          - key: application.properties 
+            path: application.properties
